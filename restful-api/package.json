@@ -4,13 +4,15 @@
     "jsonwebtoken": "^8.5.1"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "name": "restful-api",
   "version": "1.0.0",
   "type": "module",
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  },
   "author": "",
   "license": "ISC",
   "description": ""

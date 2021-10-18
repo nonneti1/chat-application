@@ -12,6 +12,13 @@ const server = http.createServer(app);
 const socket = new Server(server);
 
 app.use(express.static(path.join(__dirname, "public")));
+app.post("/chat",(req,res,next)=>{
+   res.redirect('/chat.html')
+})
+
+socket.on("connection",(socket)=>{
+    console.log('Client has connected');
+})
 
 const PORT = process.env.PORT || 5000;
 
