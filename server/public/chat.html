@@ -1,19 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
     <title>ChatIO</title>
-</head>
-<body>
-  <div class="grid-container">
-      <div class="left-grid">
-          <h3>test</h3>
+  </head>
+  <body>
+    <div class="header">
+      <form action="/logout" method="post">
+        <button type="submit" class="btn btn-danger" tybe="submit">Log out</button>
+      </form>
+    </div>
+    <div class="parent">
+      <div class="left-sidebar">
+        <span class="header-text">Members</span>
+        <ul id="users">
+          <li>
+            <div class="icon-user">
+              <img src="image/guest.jpg" alt="" />
+              <div class="status-circle active"></div>
+              <div class="user-name">Chad</div>
+            </div>
+          </li>
+          <li>
+            <div class="icon-user">
+              <img src="image/guest.jpg" alt="" />
+              <div class="status-circle offline"></div>
+              <div class="user-name">Chad</div>
+            </div>
+          </li>
+          <li>
+            <div class="icon-user">
+              <img src="image/guest.jpg" alt="" />
+              <div class="status-circle active"></div>
+              <div class="user-name">Chad</div>
+            </div>
+          </li>
+          <li>
+            <div class="icon-user">
+              <img src="image/guest.jpg" alt="" />
+              <div class="status-circle active"></div>
+              <div class="user-name">Chad</div>
+            </div>
+          </li>
+        </ul>
       </div>
-  </div>
-    <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
-    <script src="./js/script.js"></script>
-</body>
+      <div class="top-bar">
+        EXP Gaming
+        <div id="member-amount"><span class="meta">4 Members</span></div>
+      </div>
+      <div class="middle">
+        <div class="chat-message">
+          <div class="icon-user">
+            <img src="image/guest.jpg" alt="" />
+          </div>
+          <div class="message-text">
+            <p class="user-title">Chad<span class="meta"> 14:42</span></p>
+            <p>Goodmorning mfs</p>
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="icon-user">
+            <img src="image/guest.jpg" alt="" />
+          </div>
+          <div class="message-text">
+            <p class="user-title">Chad<span class="meta"> 14:52</span></p>
+            <p>Hey</p>
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="icon-user">
+            <img src="image/guest.jpg" alt="" />
+          </div>
+          <div class="message-text">
+            <p class="user-title">Chad<span class="meta"> 14:52</span></p>
+            <p>Hey</p>
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="icon-user">
+            <img src="image/guest.jpg" alt="" />
+          </div>
+          <div class="message-text">
+            <p class="user-title">Chad<span class="meta"> 14:52</span></p>
+            <p>Hey</p>
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="icon-user">
+            <img src="image/guest.jpg" alt="" />
+          </div>
+          <div class="message-text">
+            <p class="user-title">Chad<span class="meta"> 14:52</span></p>
+            <p>Hey</p>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-input">
+        <input
+          type="text"
+          name="message"
+          id="messageInput"
+          placeholder="Write a message..."
+        />
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.socket.io/4.2.0/socket.io.min.js"
+      integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>

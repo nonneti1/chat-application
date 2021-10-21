@@ -1,0 +1,20 @@
+const users = [];
+const userRegex = /^[\dA-Za-z.\s_-]+$/g;
+export const UserController = {
+    users_sign_up(req,res,next){
+        const data = req.body;
+        if(users.find(user=> user.username === data.username) === undefined && userRegex.test(data.username)){
+            users.push(data);
+            console.log(users);
+            return res.status(200).json({
+                message:"User created!"
+            })
+        }else{
+            return res.status(422).json({
+                message:"User already existed or Invalid Input!"
+            })
+        }
+    }
+}
+
+export default users;

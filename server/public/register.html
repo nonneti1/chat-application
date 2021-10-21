@@ -11,7 +11,7 @@
     <div class="header"><button class="btn btn-warning" onclick="ToLoginPage()"> Login </button></div>
     <div class="container">
       <h3>Register</h3>
-      <form action="">
+      <form action="/register" method="POST">
         <div class="form-control">
           <label for="username"> Username : </label>
           <input type="text" name="username" id="username" required placeholder="Username"/>
@@ -27,7 +27,7 @@
     </div>
     <script>
         function ToLoginPage(){
-            location.href='/index.html';
+            location.href='/';
         }
     </script>
   </body>

@@ -21,13 +21,17 @@
           <input type="password" name="password" id="password" required placeholder="Password"/>
         </div>
         <div class="form-control">
+            <label for="room"> Room&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+            <input type="text" name="room" id="room" required placeholder="Enter room name to join or create"/>
+          </div>
+        <div class="form-control">
           <button type="submit" class="btn btn-success">Log in</button>
         </div>
       </form>
     </div>
     <script>
         function ToLoginPage(){
-            location.href='/register.html';
+            location.href='/signup';
         }
     </script>
   </body>
