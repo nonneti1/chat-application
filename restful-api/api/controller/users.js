@@ -14,6 +14,25 @@ export const UserController = {
                 message:"User already existed or Invalid Input!"
             })
         }
+    },
+    users_log_in(req,res,next){
+        const data = req.body;
+        const checkUser = users.findIndex(user=>user.username === data.username);
+        if(checkUser >= 0){
+             if(users[checkUser].password === data.password){
+                 return res.status(200).json({
+                     message:"Passed"
+                 })
+             }else{
+                return res.status(401).json({
+                    message:"Invalid credentials"
+                })
+             }
+        }else{
+            return res.status(401).json({
+                message:"Invalid credentials"
+            })
+        }
     }
 }
 

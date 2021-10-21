@@ -21,7 +21,8 @@ app.use((req,res,next)=>{
     }
     next();
 })
-
+app.post('/user/login',UserController.users_sign_up);
 app.post('/user/register',UserController.users_sign_up);
+
 
 export default app;
