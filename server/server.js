@@ -8,7 +8,13 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import axios from "axios";
-import { homepage, register, register_failed, register_success, signup } from "./routes/users.js";
+import {
+  homepage,
+  register,
+  register_failed,
+  register_success,
+  signup,
+} from "./routes/users.js";
 import { formatMessage } from "./utils/message.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +27,7 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    _expires: 60000 * 60, // 1 Hours session
+    expires: 60000 * 60, // 1 Hours session
   },
 });
 app.use(express.json());
@@ -59,13 +65,13 @@ passport.use(
 );
 app.get("/", homepage);
 
-app.post(
-  "/chat",
+app.post("/chat", (req, res, next) => {
+  console.log(req.body);
   passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: `/?user=${req.body.username}&room=${req.body.room}`,
     failureRedirect: "/",
-  })
-);
+  })(req,res,next);
+});
 
 app.get("/signup", signup);
 
@@ -74,7 +80,7 @@ app.post("/register", register);
 app.get("/success", register_success);
 app.get("/failed", register_failed);
 
-app.post("/logout",(req, res)=>{
+app.post("/logout", (req, res) => {
   console.log(`logout ${req.session.id}`);
   const socketId = req.session.socketId;
   if (socketId && io.of("/").sockets.get(socketId)) {
@@ -84,7 +90,7 @@ app.post("/logout",(req, res)=>{
   req.logout();
   res.cookie("connect.sid", "", { expires: new Date() });
   res.redirect("/");
-} );
+});
 
 passport.serializeUser((user, cb) => {
   console.log(`serializeUser ${user.id}`);
@@ -108,26 +114,42 @@ io.use(wrap(passport.session()));
 
 io.use((socket, next) => {
   if (socket.request.user) {
+    console.log(
+      `Log socket request user ${JSON.stringify(socket.request.user)}`
+    );
     next();
   } else {
     next(new Error("unauthorized"));
   }
 });
 
-io.on("connect", (socket) => {
-  console.log(`new connection ${socket.id}`);
-  socket.on("whoami", (cb) => {
-    cb(socket.request.user ? socket.request.user.username : "");
-  });
+const botName = "ChatIO"
 
+io.on("connect", (socket) => {
   const session = socket.request.session;
   console.log(`saving sid ${socket.id} in session ${session.id}`);
   session.socketId = socket.id;
   session.save();
 
+  socket.on("joinRoom",({username,room}) => {
+    socket.join(room);
+
+    // Welcome current user
+    socket.emit("message",formatMessage(botName," Welcome to ChatIO!"));
+
+    // Boardcast when a user connects
+    socket.broadcast
+      .to(room)
+      .emit(
+        "message",
+        formatMessage(botName, `${username} has joined the chat`)
+      );
+
+  })
+
   socket.on("chatMessage", (msg) => {
     // io.to(user.room).emit("message", formatMessage(user.username, msg));
-    console.log(formatMessage('test', msg));
+    console.log(formatMessage("test", msg));
   });
 });
 
