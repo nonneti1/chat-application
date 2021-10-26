@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>ChatIO</title>
+  </head>
+  <body>
+    <div class="header">
+      <button class="btn btn-primary" onclick="ToLoginPage()">Sign up</button>
+    </div>
+    <div class="container">
+      <h3>Select room</h3>
+      <form action="/chat" method="post">
+        <div class="form-control">
+          <div>
+            <input type="radio" name="roomTypes" id="selectRoom" />
+            <label for="selectRoom">Join existing room </label>
+          </div>
+          <div>
+            <input type="radio" name="roomTypes" id="createRoom" />
+            <label for="createRoom">Create room</label>
+          </div>
+        </div>
+        <div class="form-control" style="display: none;" id="selectRoomDiv"> 
+          <select name="roomList" id="roomList">
+            <option value="1">1</option>
+          </select>
+        </div>
+        <div class="form-control" style="display: none" id="createRoomDiv">
+          <label for="room">
+            Room&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label
+          >
+          <input
+            type="text"
+            name="room"
+            id="room"
+            required
+            placeholder="Enter room name to join or create"
+          />
+        </div>
+        <div class="form-control">
+          <button type="submit" class="btn btn-success">Log in</button>
+        </div>
+      </form>
+    </div>
+    <script>
+      function ToLoginPage() {
+        location.href = "/signup";
+      }
+      const radios = document.querySelectorAll("input[type='radio']");
+      const selectRoomDiv = document.getElementById("selectRoomDiv");
+      const createRoomDiv = document.getElementById("createRoomDiv");
+      radios.forEach((elem) => {
+        elem.addEventListener("change", (e) => {
+          radioHandler(e.target.id);
+        });
+      });
+      function radioHandler(types) {
+        if (types === "selectRoom") {
+          console.log("Getting rooms list");
+          selectRoomDiv.style.display="block";
+          createRoomDiv.style.display="none";
+
+        } else if (types === "createRoom") {
+          console.log("Show input");
+          selectRoomDiv.style.display="none";
+          createRoomDiv.style.display="block";
+        }
+      }
+    </script>
+  </body>
+</html>

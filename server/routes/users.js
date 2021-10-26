@@ -13,7 +13,7 @@ export function homepage (req, res){
     } else {
       console.log("unknown user");
     }
-    res.sendFile(isAuthenticated ? "chat.html" : "index.html", {
+    res.sendFile(isAuthenticated ? "landing.html" : "index.html", {
       root: path.join(path.resolve(), "public"),
     });
 }

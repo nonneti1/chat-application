@@ -65,7 +65,13 @@ body {
     background-color: #dc3545;
     border-color: #dc3545;
 }
-.form-control input {
+.form-control input[type="text"] {
+  font-size: 14px;
+  padding: 5px;
+  height: 20px;
+  width: 70%;
+}
+.form-control input[type="password"] {
   font-size: 14px;
   padding: 5px;
   height: 20px;
@@ -109,9 +115,11 @@ ul{
 }
 .middle .chat-message{
     min-width: 10%;
-    max-width: 50%;
     margin-bottom: 15px;
     display:flex;
+}
+.chat-message.sent{
+ justify-content: flex-end;
 }
 .left-sidebar ul li{
     padding: 10px 0;
@@ -173,6 +181,7 @@ ul{
     min-width: 10%;
     max-width: 70%;
     margin-left: 15px;
+    margin-right: 15px;
     word-wrap: break-word;
   }
   #member-amount{

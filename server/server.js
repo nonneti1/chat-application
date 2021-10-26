@@ -16,6 +16,7 @@ import {
   signup,
 } from "./routes/users.js";
 import { formatMessage } from "./utils/message.js";
+import { getCurrentUser, getRoomUsers, userJoin, userLeave } from "./utils/users.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT || 5000;
@@ -132,6 +133,7 @@ io.on("connect", (socket) => {
   session.save();
 
   socket.on("joinRoom",({username,room}) => {
+    let user = userJoin(socket.id,username,room);
     socket.join(room);
 
     // Welcome current user
@@ -145,12 +147,40 @@ io.on("connect", (socket) => {
         formatMessage(botName, `${username} has joined the chat`)
       );
 
+   // Send room details and users
+   io.to(room).emit('roomUsers', {
+    room: room,
+    users: getRoomUsers(room)
+  });   
+
   })
 
+  // Runs on message event
   socket.on("chatMessage", (msg) => {
-    // io.to(user.room).emit("message", formatMessage(user.username, msg));
-    console.log(formatMessage("test", msg));
+    const user = getCurrentUser(socket.id);
+    
+    io.to(user.room).emit('message', formatMessage(user.username, msg));
   });
+
+  // Runs when client disconnects
+  socket.on('disconnect', () => {
+    const user = userLeave(socket.id);
+
+    if (user) {
+      io.to(user.room).emit(
+        'message',
+        formatMessage(botName, `${user.username} has left the chat`)
+      );
+
+      // Send users and room info
+      io.to(user.room).emit('roomUsers', {
+        room: user.room,
+        users: getRoomUsers(user.room)
+      });
+    }
+  });
+
+
 });
 
 server.listen(port, () => {
