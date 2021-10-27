@@ -9,47 +9,30 @@
   </head>
   <body>
     <div class="header">
-      <button class="btn btn-primary" onclick="ToLoginPage()">Sign up</button>
+      <form action="/logout" method="post">
+        <button type="submit" class="btn btn-danger" tybe="submit">Log out</button>
+      </form>
     </div>
     <div class="container">
       <h3>Select room</h3>
-      <form action="/chat" method="post">
+      <form action="">
         <div class="form-control">
-          <div>
-            <input type="radio" name="roomTypes" id="selectRoom" />
-            <label for="selectRoom">Join existing room </label>
-          </div>
-          <div>
-            <input type="radio" name="roomTypes" id="createRoom" />
-            <label for="createRoom">Create room</label>
-          </div>
-        </div>
-        <div class="form-control" style="display: none;" id="selectRoomDiv"> 
-          <select name="roomList" id="roomList">
-            <option value="1">1</option>
+          <label for="room">Room : </label>
+          <select name="room" id="room" required>
+            <option disabled selected value> -- Select room -- </option>
+            <option value="javascript">Javascript</option>
+            <option value="php">PHP</option>
+            <option value="go">GO</option>
+            <option value="c">C</option>
+            <option value="python">Python</option>
           </select>
         </div>
-        <div class="form-control" style="display: none" id="createRoomDiv">
-          <label for="room">
-            Room&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label
-          >
-          <input
-            type="text"
-            name="room"
-            id="room"
-            required
-            placeholder="Enter room name to join or create"
-          />
-        </div>
         <div class="form-control">
-          <button type="submit" class="btn btn-success">Log in</button>
+          <button type="submit" class="btn btn-success">Join</button>
         </div>
       </form>
     </div>
     <script>
-      function ToLoginPage() {
-        location.href = "/signup";
-      }
       const radios = document.querySelectorAll("input[type='radio']");
       const selectRoomDiv = document.getElementById("selectRoomDiv");
       const createRoomDiv = document.getElementById("createRoomDiv");

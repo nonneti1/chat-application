@@ -67,7 +67,6 @@ passport.use(
 app.get("/", homepage);
 
 app.post("/chat", (req, res, next) => {
-  console.log(req.body);
   passport.authenticate("local", {
     successRedirect: `/?user=${req.body.username}&room=${req.body.room}`,
     failureRedirect: "/",

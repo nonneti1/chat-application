@@ -8,12 +8,13 @@ const restURL = "http://localhost:3000/";
 
 export function homepage (req, res){
     const isAuthenticated = !!req.user;
+    console.log(`Log req.user ${req.user}`);
     if (isAuthenticated) {
       console.log(`user is authenticated, session is ${req.session.id}`);
     } else {
       console.log("unknown user");
     }
-    res.sendFile(isAuthenticated ? "landing.html" : "index.html", {
+    res.sendFile(isAuthenticated ? "chat.html" : "index.html", {
       root: path.join(path.resolve(), "public"),
     });
 }

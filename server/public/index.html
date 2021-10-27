@@ -21,9 +21,16 @@
           <input type="password" name="password" id="password" required placeholder="Password"/>
         </div>
         <div class="form-control">
-            <label for="room"> Room&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <input type="text" name="room" id="room" required placeholder="Enter room name to join or create"/>
-          </div>
+          <label for="room" style="padding-right:20px">Room     : </label>
+          <select name="room" id="room" required>
+            <option disabled selected value> -- Select room -- </option>
+            <option value="Javascript">Javascript</option>
+            <option value="PHP">PHP</option>
+            <option value="GO">GO</option>
+            <option value="C">C</option>
+            <option value="Python">Python</option>
+          </select>
+        </div>
         <div class="form-control">
           <button type="submit" class="btn btn-success">Log in</button>
         </div>
