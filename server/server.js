@@ -10,18 +10,20 @@ import { Strategy as LocalStrategy } from "passport-local";
 import axios from "axios";
 import {
   homepage,
+  landingPage,
   register,
   register_failed,
   register_success,
   signup,
 } from "./routes/users.js";
 import { formatMessage } from "./utils/message.js";
-import { getCurrentUser, getRoomUsers, userJoin, userLeave } from "./utils/users.js";
+import { getCurrentUser, getRoomHistory, getRoomUsers, userJoin, userLeave } from "./utils/users.js";
+import morgan from "morgan";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT || 5000;
-
 const app = express();
+// app.use(morgan('combined'))
 const server = http.createServer(app);
 const sessionMiddleware = session({
   secret: "chatio",
@@ -34,7 +36,7 @@ const sessionMiddleware = session({
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: false,
+    extended: true,
   })
 );
 app.use(express.static(path.join(__dirname, "public/asset")));
@@ -66,12 +68,19 @@ passport.use(
 );
 app.get("/", homepage);
 
-app.post("/chat", (req, res, next) => {
+app.post("/login", (req, res, next) => {
   passport.authenticate("local", {
-    successRedirect: `/?user=${req.body.username}&room=${req.body.room}`,
+    successRedirect: `/?user=${req.body.username}`,
     failureRedirect: "/",
   })(req,res,next);
 });
+
+app.post("/selectRoom",(req,res,next)=>{
+ const isAuthenticated = !!req.user;
+  isAuthenticated ? res.redirect(`/join?user=${req.user.username}&room=${req.body.room}`) : res.redirect('/');
+})
+
+app.get("/join",landingPage)
 
 app.get("/signup", signup);
 
@@ -91,6 +100,36 @@ app.post("/logout", (req, res) => {
   res.cookie("connect.sid", "", { expires: new Date() });
   res.redirect("/");
 });
+
+app.post("/leaveAndLogout", (req, res) => {
+  console.log(`logout ${req.session.id}`);
+  const socketId = req.session.socketId;
+  console.log(`Socket Id from route ${socketId}`);
+  if (socketId && io.of("/").sockets.get(socketId)) {
+    console.log(`forcefully closing socket ${socketId}`);
+    io.of("/").sockets.get(socketId).disconnect(true);
+  }
+  userLeave(socketId,true);
+  req.logout();
+  res.cookie("connect.sid", "", { expires: new Date() });
+  res.redirect("/");
+});
+
+app.post("/getRoomHistory",(req,res,next)=>{  
+  try{
+  const username = req.body.username;
+  console.log(`Log request body ${JSON.stringify(req.body)}`);
+  const result = getRoomHistory(username);
+    return res.status(200).json({
+      data:result
+    })
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({
+      message:error
+    })
+  }
+})
 
 passport.serializeUser((user, cb) => {
   console.log(`serializeUser ${user.id}`);
@@ -163,7 +202,7 @@ io.on("connect", (socket) => {
 
   // Runs when client disconnects
   socket.on('disconnect', () => {
-    const user = userLeave(socket.id);
+    const user = userLeave(socket.id,false);
 
     if (user) {
       io.to(user.room).emit(

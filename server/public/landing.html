@@ -10,21 +10,23 @@
   <body>
     <div class="header">
       <form action="/logout" method="post">
-        <button type="submit" class="btn btn-danger" tybe="submit">Log out</button>
+        <button type="submit" class="btn btn-danger" tybe="submit">
+          Log out
+        </button>
       </form>
     </div>
     <div class="container">
       <h3>Select room</h3>
-      <form action="">
+      <form action="/selectRoom" method="post">
         <div class="form-control">
           <label for="room">Room : </label>
           <select name="room" id="room" required>
-            <option disabled selected value> -- Select room -- </option>
-            <option value="javascript">Javascript</option>
-            <option value="php">PHP</option>
-            <option value="go">GO</option>
-            <option value="c">C</option>
-            <option value="python">Python</option>
+            <option disabled value>-- Select room --</option>
+            <option value="C">C</option>
+            <option value="GO">GO</option>
+            <option value="Javascript">Javascript</option>
+            <option value="PHP">PHP</option>
+            <option value="Python">Python</option>
           </select>
         </div>
         <div class="form-control">
@@ -33,26 +35,43 @@
       </form>
     </div>
     <script>
-      const radios = document.querySelectorAll("input[type='radio']");
-      const selectRoomDiv = document.getElementById("selectRoomDiv");
-      const createRoomDiv = document.getElementById("createRoomDiv");
-      radios.forEach((elem) => {
-        elem.addEventListener("change", (e) => {
-          radioHandler(e.target.id);
-        });
-      });
-      function radioHandler(types) {
-        if (types === "selectRoom") {
-          console.log("Getting rooms list");
-          selectRoomDiv.style.display="block";
-          createRoomDiv.style.display="none";
+      const urlParams = new URLSearchParams(window.location.search);
+      const username = urlParams.get("user");
+      const url = "http://localhost:5000/getRoomHistory";
+      const data = JSON.stringify({ username: username });
+      let roomHistoryData;
 
-        } else if (types === "createRoom") {
-          console.log("Show input");
-          selectRoomDiv.style.display="none";
-          createRoomDiv.style.display="block";
+      function getRoomHistory() {
+        return fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: data,
+        }).then((data) => data.json());
+        // .then((result) => {
+        //   return result
+        // });
+      }
+      async function main() {
+        const data = await getRoomHistory();
+        const selectElem = document.getElementById("room");
+        data.data.sort();
+        if (data.data.length > 0) {
+           for (i = 0; i < data.data.length; i++) {
+            let option = document.createElement("option");
+            option.value = data.data[i];
+            option.text = data.data[i];
+            selectElem.prepend(option);
+          }
+          let existingOption = document.createElement("option");
+          existingOption.value;
+          existingOption.disabled=true;
+          existingOption.innerText="-- Joined room --"
+          selectElem.prepend(existingOption);
         }
       }
+      main();
+
+      //  const selectElem = document.createElement('select');
     </script>
   </body>
 </html>

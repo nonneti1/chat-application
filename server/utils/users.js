@@ -21,11 +21,12 @@ export function getCurrentUser(id) {
   return users.find(user => user.id === id);
 }
 
-export function userLeave(id) {
+export function userLeave(id,isLeaveRoom) {
+  console.log(`Socket Id from function ${id}`);
   const index = users.findIndex((user) => user.id === id);
   if (index !== -1) {
     users[index].active=0;
-    // return users.splice(index, 1)[0];
+    isLeaveRoom && users.splice(index, 1)[0];
     return users[index];
   }
 }
@@ -33,5 +34,14 @@ export function userLeave(id) {
 // Get room users
 export function getRoomUsers(room) {
   return users.filter((user) => user.room === room);
+}
+
+// Get user room history
+export function getRoomHistory(username){
+  const foundUser = users.filter(user=>user.username === username).map(i=>{
+   return i.room;
+  });
+  console.log(foundUser);
+  return foundUser;
 }
 export default users;

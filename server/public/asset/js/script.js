@@ -98,3 +98,8 @@ function outputUsers(users) {
     userList.appendChild(li);
   });
 }
+
+
+function leave() {
+  window.history.back();
+}
