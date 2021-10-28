@@ -2,8 +2,17 @@ const users = [];
 
 // Join user to chat
 export function userJoin(id, username, room) {
-  const user = { id, username, room };
-  users.push(user);
+  const findDuplicateUser = users.filter((v,i)=>{
+    return (v["username"]=== username && v["room"] === room)
+  })
+  if(findDuplicateUser.length > 0){
+    const index = users.findIndex((user) => user.username === username && user.room === room);
+      users[index].id = id;
+      users[index].active = 1;
+  }else{
+    const user = { id, username, room, active:1};
+    users.push(user);
+  }
   return users;
 }
 
@@ -14,9 +23,10 @@ export function getCurrentUser(id) {
 
 export function userLeave(id) {
   const index = users.findIndex((user) => user.id === id);
-
   if (index !== -1) {
-    return users.splice(index, 1)[0];
+    users[index].active=0;
+    // return users.splice(index, 1)[0];
+    return users[index];
   }
 }
 

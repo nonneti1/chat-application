@@ -41,7 +41,7 @@ chatForm.addEventListener("submit", (e) => {
 
 // Get room and users detail
 socket.on("roomUsers", ({ room, users }) => {
-  outputRoomName(room, users.length);
+  outputRoomName(room, users.length,users);
   outputUsers(users);
   console.log(room, users, users.length);
 });
@@ -76,9 +76,12 @@ function outputMessage(message) {
 }
 
 // Add room name to DOM
-function outputRoomName(room, users) {
+function outputRoomName(room, usersTotal,users) {
+  const onlineMember = users.filter(val=>{
+    return val.active;
+  })
   roomName.innerText = room;
-  members.innerText = `${users} Members`;
+  members.innerText = `${usersTotal} Members, ${onlineMember.length} Online`;
 }
 
 // Add users to DOM
@@ -89,7 +92,7 @@ function outputUsers(users) {
 
     li.innerHTML = `<div class="icon-user">
         <img src="image/guest.jpg" alt="" />
-        <div class="status-circle active"></div>
+        <div class="status-circle ${user.active === 1 ? 'active':'offline'}"></div>
         <div class="user-name">${user.username}</div>
       </div>`;
     userList.appendChild(li);
