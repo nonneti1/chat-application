@@ -200,6 +200,18 @@ io.on("connect", (socket) => {
     io.to(user.room).emit('message', formatMessage(user.username, msg));
   });
 
+  socket.on("leaveRoom",()=>{
+    const user = userLeave(socket.id,true);
+    io.to(user.room).emit('roomUsers', {
+      room: user.room,
+      users: getRoomUsers(user.room)
+    });
+    io.to(user.room).emit(
+      'message',
+      formatMessage(botName, `${user.username} has leave the chat room`)
+    );
+  })
+
   // Runs when client disconnects
   socket.on('disconnect', () => {
     const user = userLeave(socket.id,false);

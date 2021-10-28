@@ -101,5 +101,6 @@ function outputUsers(users) {
 
 
 function leave() {
+  socket.emit("leaveRoom",username);
   window.history.back();
 }

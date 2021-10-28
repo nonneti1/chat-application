@@ -26,7 +26,11 @@ export function userLeave(id,isLeaveRoom) {
   const index = users.findIndex((user) => user.id === id);
   if (index !== -1) {
     users[index].active=0;
-    isLeaveRoom && users.splice(index, 1)[0];
+    const tempUser = users[index];
+    if(isLeaveRoom){
+      users.splice(index, 1)[0];
+      return tempUser;
+    }
     return users[index];
   }
 }
