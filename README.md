@@ -1,5 +1,5 @@
 # chat-application
-Chat application using express withg Socket.io
+Chat application using express with Socket.io
 
 ## Usage
 ```
