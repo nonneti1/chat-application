@@ -10,3 +10,6 @@ cd restful-api
 npm install && npm start
 ```
 browse localhost:5000 
+### Requirements
+NodeJS 17
+NPM 8
