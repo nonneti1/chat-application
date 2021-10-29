@@ -45,7 +45,6 @@ export function getRoomHistory(username){
   const foundUser = users.filter(user=>user.username === username).map(i=>{
    return i.room;
   });
-  console.log(foundUser);
   return foundUser;
 }
 export default users;

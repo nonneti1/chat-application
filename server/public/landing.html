@@ -47,9 +47,6 @@
           headers: { "Content-Type": "application/json" },
           body: data,
         }).then((data) => data.json());
-        // .then((result) => {
-        //   return result
-        // });
       }
       async function main() {
         const data = await getRoomHistory();

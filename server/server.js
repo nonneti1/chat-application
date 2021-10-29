@@ -101,24 +101,11 @@ app.post("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.post("/leaveAndLogout", (req, res) => {
-  console.log(`logout ${req.session.id}`);
-  const socketId = req.session.socketId;
-  console.log(`Socket Id from route ${socketId}`);
-  if (socketId && io.of("/").sockets.get(socketId)) {
-    console.log(`forcefully closing socket ${socketId}`);
-    io.of("/").sockets.get(socketId).disconnect(true);
-  }
-  userLeave(socketId,true);
-  req.logout();
-  res.cookie("connect.sid", "", { expires: new Date() });
-  res.redirect("/");
-});
 
+// Client request room history when login 
 app.post("/getRoomHistory",(req,res,next)=>{  
   try{
   const username = req.body.username;
-  console.log(`Log request body ${JSON.stringify(req.body)}`);
   const result = getRoomHistory(username);
     return res.status(200).json({
       data:result
@@ -153,9 +140,6 @@ io.use(wrap(passport.session()));
 
 io.use((socket, next) => {
   if (socket.request.user) {
-    console.log(
-      `Log socket request user ${JSON.stringify(socket.request.user)}`
-    );
     next();
   } else {
     next(new Error("unauthorized"));
@@ -171,19 +155,6 @@ io.on("connect", (socket) => {
   session.save();
   const sessionExpiresTime = new Date(socket.request.session.cookie._expires) - Date.now();
   const timeout = setTimeout(()=>socket.disconnect(true),sessionExpiresTime);
- 
-  // socket.onAny((eventname,next)=>{
-  //   const currentTime = new Date();
-
-  //   if(currentTime <= sessionExpiresTime){
-  //     next();
-  //   }else{
-  //     next(new Error('Session expired'))
-  //   }
-
-  // })
-
-
 
   socket.on("joinRoom",({username,room}) => {
     let user = userJoin(socket.id,username,room);
@@ -216,6 +187,7 @@ io.on("connect", (socket) => {
     
   });
 
+  // User leaves room
   socket.on("leaveRoom",()=>{
     const user = userLeave(socket.id,true);
     if(user){
@@ -237,7 +209,7 @@ io.on("connect", (socket) => {
     if (user) {
       io.to(user.room).emit(
         'message',
-        formatMessage(botName, `${user.username} has left the chat`)
+        formatMessage(botName, `${user.username} has disconnected`)
       );
 
       // Send users and room info

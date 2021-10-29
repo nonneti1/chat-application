@@ -16,11 +16,6 @@ export function homepage(req, res) {
   res.sendFile(isAuthenticated ? "landing.html" : "index.html", {
     root: path.join(path.resolve(), "public"),
   });
-  // isAuthenticated
-  //   ? res.redirect(`/?user=${req.user.username}`)
-  //   : res.sendFile("index.html", {
-  //       root: path.join(path.resolve(), "public"),
-  //     });
 }
 
 export function landingPage(req, res) {
