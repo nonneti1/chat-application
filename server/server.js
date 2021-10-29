@@ -30,7 +30,7 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: 60000 * 60, // 1 Hours session
+    maxAge: 60000 * 60, // 1 Hours session
   },
 });
 app.use(express.json());
@@ -169,6 +169,21 @@ io.on("connect", (socket) => {
   console.log(`saving sid ${socket.id} in session ${session.id}`);
   session.socketId = socket.id;
   session.save();
+  const sessionExpiresTime = new Date(socket.request.session.cookie._expires) - Date.now();
+  const timeout = setTimeout(()=>socket.disconnect(true),sessionExpiresTime);
+ 
+  // socket.onAny((eventname,next)=>{
+  //   const currentTime = new Date();
+
+  //   if(currentTime <= sessionExpiresTime){
+  //     next();
+  //   }else{
+  //     next(new Error('Session expired'))
+  //   }
+
+  // })
+
+
 
   socket.on("joinRoom",({username,room}) => {
     let user = userJoin(socket.id,username,room);
@@ -195,27 +210,30 @@ io.on("connect", (socket) => {
 
   // Runs on message event
   socket.on("chatMessage", (msg) => {
-    const user = getCurrentUser(socket.id);
     
+    const user = getCurrentUser(socket.id);
     io.to(user.room).emit('message', formatMessage(user.username, msg));
+    
   });
 
   socket.on("leaveRoom",()=>{
     const user = userLeave(socket.id,true);
-    io.to(user.room).emit('roomUsers', {
-      room: user.room,
-      users: getRoomUsers(user.room)
-    });
-    io.to(user.room).emit(
-      'message',
-      formatMessage(botName, `${user.username} has leave the chat room`)
-    );
+    if(user){
+      io.to(user.room).emit('roomUsers', {
+        room: user.room,
+        users: getRoomUsers(user.room)
+      });
+      io.to(user.room).emit(
+        'message',
+        formatMessage(botName, `${user.username} has leave the chat room`)
+      );
+    }
   })
 
   // Runs when client disconnects
   socket.on('disconnect', () => {
     const user = userLeave(socket.id,false);
-
+    clearTimeout(timeout);
     if (user) {
       io.to(user.room).emit(
         'message',
