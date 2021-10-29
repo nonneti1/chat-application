@@ -1,9 +1,11 @@
 const users = [];
-const userRegex = /^[\dA-Za-z.\s_-]+$/g;
+const userRegex = /^(?=[a-z_\d]*[a-z])[a-z_\d]{5,}$/i;
+const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/i;
 export const UserController = {
     users_sign_up(req,res,next){
         const data = req.body;
-        if(users.find(user=> user.username === data.username) === undefined && userRegex.test(data.username)){
+        console.log(userRegex.test(data.username)+' '+userRegex.test(data.password));
+        if(users.find(user=> user.username === data.username) === undefined && userRegex.test(data.username) && passwordRegex.test(data.password)){  
             data.id=Date.now();
             users.push(data);
             console.log(users);
